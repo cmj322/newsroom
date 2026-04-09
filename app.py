@@ -98,7 +98,7 @@ elif menu == "관리자 대시보드":
                         all_news = ""
                         for f in feeds:
                             parsed = feedparser.parse(f['url'])
-                            for entry in parsed.entries[:5]:
+                            for entry in parsed.entries[:10]:
                                 # 제목과 요약을 합쳐서 전달
                                 title = entry.get('title', '')
                                 summary = entry.get('summary', '')[:100]
@@ -115,8 +115,8 @@ elif menu == "관리자 대시보드":
                             model = genai.GenerativeModel('gemini-1.5-flash') 
                             
                             prompt = f"""
-                            너는 IT 전문 편집장이야. 아래 뉴스들을 보고 오늘 가장 중요한 IT 이슈 3가지를 핵심 요약해줘.
-                            마지막에는 내일의 기술 트렌드에 대한 짧은 코멘트도 달아줘.
+                            너는 공인중개사와 투자 전문가를 위한 부동산 전문 편집장이야. 
+                            오늘 뉴스 중에서 아파트 청약 정보, 정부의 부동산 정책 변화, 금리 관련 소식을 중점적으로 요약해줘.
                             형식은 가독성 좋은 마크다운(Markdown)을 사용해.
                             
                             뉴스 내용:
