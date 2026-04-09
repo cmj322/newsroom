@@ -134,11 +134,11 @@ elif menu == "관리자 대시보드":
                             st.stop()
 
                         with st.expander("🛠️ 디버깅: 내 API 키로 사용 가능한 모델 목록"):
-                        try:
-                             models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-                             st.write(models)
-                        except Exception as debug_e:
-                             st.error(f"모델 목록을 가져오는 데 실패했습니다: {debug_e}")
+                            try:
+                                models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+                                st.write(models)
+                            except Exception as debug_e:
+                                st.error(f"모델 목록을 가져오는 데 실패했습니다: {debug_e}")
                         
                         try:
                             # 2. AI 분석 (가장 표준적인 모델명 사용)
