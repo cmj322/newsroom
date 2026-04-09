@@ -133,10 +133,17 @@ elif menu == "관리자 대시보드":
                             st.error("수집된 뉴스 내용이 없습니다. RSS 주소를 확인해주세요.")
                             st.stop()
 
+                        with st.expander("🛠️ 디버깅: 내 API 키로 사용 가능한 모델 목록"):
+                        try:
+                             models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+                             st.write(models)
+                        except Exception as debug_e:
+                             st.error(f"모델 목록을 가져오는 데 실패했습니다: {debug_e}")
+                        
                         try:
                             # 2. AI 분석 (가장 표준적인 모델명 사용)
                             # 'models/gemini-1.5-flash' 대신 'gemini-1.5-flash'만 입력해보세요.
-                            model = genai.GenerativeModel(model_name='gemini-1.5-flash-latest') 
+                            model = genai.GenerativeModel(model_name='model/gemini-1.5-flash') 
                             
                             prompt = f"""
                             너는 전문 뉴스 편집장이야. 아래 뉴스 내용들을 바탕으로 오늘 핵심 이슈 3가지를 정리해주고, 
