@@ -2,5 +2,9 @@
     {
         "name": "매일경제",
         "url": "https://www.mk.co.kr/rss/50300009/"
+    },
+    {
+        "name": "한국경제",
+        "url": "https://www.hankyung.com/feed/realestate"
     }
 ]
