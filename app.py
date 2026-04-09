@@ -75,16 +75,42 @@ elif menu == "관리자 대시보드":
             st.subheader("구독할 RSS 피드 관리")
             feeds, f_sha = load_json("feeds.json", [])
             
+            # 1. 피드 추가 양식
             with st.form("add_feed"):
-                name = st.text_input("언론사/사이트 이름")
-                url = st.text_input("RSS 주소(XML URL)")
+                col1, col2 = st.columns(2)
+                with col1:
+                    name = st.text_input("언론사/사이트 이름")
+                with col2:
+                    url = st.text_input("RSS 주소(XML URL)")
                 if st.form_submit_button("추가하기"):
-                    feeds.append({"name": name, "url": url})
-                    save_json("feeds.json", feeds, f_sha, "새 RSS 피드 추가")
-                    st.success("피드가 저장되었습니다!")
+                    if name and url:
+                        feeds.append({"name": name, "url": url})
+                        save_json("feeds.json", feeds, f_sha, "새 RSS 피드 추가")
+                        st.success(f"'{name}' 피드가 추가되었습니다!")
+                        st.rerun() # 화면 새로고침
+                    else:
+                        st.error("이름과 URL을 모두 입력해주세요.")
             
-            st.write("현재 등록된 피드:")
-            st.table(pd.DataFrame(feeds)) if feeds else st.write("등록된 피드가 없습니다.")
+            st.divider() # 구분선
+            
+            # 2. 개별 피드 삭제 기능
+            if feeds:
+                st.subheader("등록된 피드 삭제")
+                # 피드 이름들만 리스트로 만듭니다.
+                feed_names = [f['name'] for f in feeds]
+                selected_feed = st.selectbox("삭제할 피드를 선택하세요", feed_names)
+                
+                if st.button("선택한 피드 삭제"):
+                    # 선택한 이름을 제외한 나머지 피드들만 남깁니다.
+                    new_feeds = [f for f in feeds if f['name'] != selected_feed]
+                    save_json("feeds.json", new_feeds, f_sha, f"피드 삭제: {selected_feed}")
+                    st.success(f"'{selected_feed}' 피드가 삭제되었습니다.")
+                    st.rerun() # 화면 새로고침
+                
+                st.write("현재 등록된 피드 목록:")
+                st.table(pd.DataFrame(feeds))
+            else:
+                st.info("현재 등록된 피드가 없습니다. 위 양식에서 추가해주세요.")
 
         with tab2:
             st.subheader("AI 뉴스 수집 및 분석")
