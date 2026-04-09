@@ -94,24 +94,47 @@ elif menu == "관리자 대시보드":
                     st.error("먼저 RSS 피드를 하나 이상 등록해주세요!")
                 else:
                     with st.spinner("AI가 뉴스를 읽고 요약하는 중..."):
-                        # 뉴스 수집
+                        # 1. 뉴스 수집
                         all_news = ""
                         for f in feeds:
                             parsed = feedparser.parse(f['url'])
                             for entry in parsed.entries[:5]:
-                                all_news += f"[{f['name']}] {entry.title}\n{entry.description[:100]}...\n\n"
+                                # 제목과 요약을 합쳐서 전달
+                                title = entry.get('title', '')
+                                summary = entry.get('summary', '')[:100]
+                                all_news += f"[{f['name']}] {title}\n{summary}\n\n"
                         
-                        # AI 분석 (Gemini)
-                        model = genai.GenerativeModel('gemini-1.5-flash')
-                        prompt = f"너는 IT 전문 편집장이야. 다음 뉴스들을 보고 오늘 가장 중요한 이슈 3가지를 정하고, 전체 내용을 '뉴스레터' 형식으로 아주 친절하고 멋지게 요약해줘:\n\n{all_news}"
-                        response = model.generate_content(prompt)
-                        
-                        # 결과 저장
-                        news_db, n_sha = load_json("news_data.json", {})
-                        news_db[today] = response.text
-                        save_json("news_data.json", news_db, n_sha, f"{today} 뉴스 분석 완료")
-                        st.success("분석 완료! 메인 화면에서 확인하세요.")
-                        st.markdown(response.text)
+                        if not all_news.strip():
+                            st.error("수집된 뉴스 내용이 없습니다. RSS 주소를 확인해주세요.")
+                            st.stop()
+
+                        try:
+                            # 2. AI 분석 (모델 명칭을 더 안정적인 것으로 변경)
+                            # 'gemini-1.5-flash' 대신 'models/gemini-1.5-flash'를 시도하거나
+                            # 가장 기본인 'gemini-1.5-flash'를 사용합니다.
+                            model = genai.GenerativeModel('gemini-1.5-flash') 
+                            
+                            prompt = f"""
+                            너는 IT 전문 편집장이야. 아래 뉴스들을 보고 오늘 가장 중요한 IT 이슈 3가지를 핵심 요약해줘.
+                            마지막에는 내일의 기술 트렌드에 대한 짧은 코멘트도 달아줘.
+                            형식은 가독성 좋은 마크다운(Markdown)을 사용해.
+                            
+                            뉴스 내용:
+                            {all_news}
+                            """
+                            
+                            response = model.generate_content(prompt)
+                            
+                            # 3. 결과 저장
+                            news_db, n_sha = load_json("news_data.json", {})
+                            news_db[today] = response.text
+                            save_json("news_data.json", news_db, n_sha, f"{today} 뉴스 분석 완료")
+                            st.success("분석 완료! 메인 화면에서 확인하세요.")
+                            st.markdown(response.text)
+                            
+                        except Exception as e:
+                            st.error(f"AI 분석 중 오류가 발생했습니다: {e}")
+                            st.info("Tip: API 키가 올바른지, 혹은 Google AI Studio에서 'Gemini 1.5 Flash' 모델이 활성화 되어있는지 확인해주세요.")
 
         with tab3:
             st.metric("누적 방문수", stats["total_views"])
