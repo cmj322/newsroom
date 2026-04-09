@@ -143,7 +143,7 @@ elif menu == "관리자 대시보드":
                         try:
                             # 2. AI 분석 (가장 표준적인 모델명 사용)
                             # 'models/gemini-1.5-flash' 대신 'gemini-1.5-flash'만 입력해보세요.
-                            model = genai.GenerativeModel(model_name='model/gemini-1.5-flash') 
+                            model = genai.GenerativeModel(model_name='models/gemini-2.0-flash') 
                             
                             prompt = f"""
                             너는 전문 뉴스 편집장이야. 아래 뉴스 내용들을 바탕으로 오늘 핵심 이슈 3가지를 정리해주고, 
@@ -165,7 +165,7 @@ elif menu == "관리자 대시보드":
                         except Exception as e:
                             # 에러 발생 시 상세 메시지 출력
                             st.error(f"AI 분석 중 오류가 발생했습니다: {e}")
-                            st.info("해결 방법: 구글 AI 스튜디오(aistudio.google.com)에서 API 키가 'Gemini 1.5 Flash' 모델을 지원하는지 확인해주세요.")
+                            st.info("해결 방법: 구글 AI 스튜디오(aistudio.google.com)에서 API 키가 'Gemini 2.0 Flash' 모델을 지원하는지 확인해주세요.")
                             
         with tab3:
             st.metric("누적 방문수", stats["total_views"])
