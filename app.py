@@ -124,10 +124,9 @@ elif menu == "관리자 대시보드":
                         all_news = ""
                         for f in feeds:
                             parsed = feedparser.parse(f['url'])
-                            for entry in parsed.entries[:10]:
-                                # 제목과 요약을 합쳐서 전달
+                            for entry in parsed.entries[:5]:
                                 title = entry.get('title', '')
-                                summary = entry.get('summary', '')[:100]
+                                summary = entry.get('description', '')[:100] # summary 대신 description 사용 시도
                                 all_news += f"[{f['name']}] {title}\n{summary}\n\n"
                         
                         if not all_news.strip():
@@ -135,17 +134,15 @@ elif menu == "관리자 대시보드":
                             st.stop()
 
                         try:
-                            # 2. AI 분석 (모델 명칭을 더 안정적인 것으로 변경)
-                            # 'gemini-1.5-flash' 대신 'models/gemini-1.5-flash'를 시도하거나
-                            # 가장 기본인 'gemini-1.5-flash'를 사용합니다.
-                            model = genai.GenerativeModel('gemini-1.5-flash') 
+                            # 2. AI 분석 (가장 표준적인 모델명 사용)
+                            # 'models/gemini-1.5-flash' 대신 'gemini-1.5-flash'만 입력해보세요.
+                            model = genai.GenerativeModel(model_name='gemini-1.5-flash') 
                             
                             prompt = f"""
-                            너는 공인중개사와 투자 전문가를 위한 부동산 전문 편집장이야. 
-                            오늘 뉴스 중에서 아파트 청약 정보, 정부의 부동산 정책 변화, 금리 관련 소식을 중점적으로 요약해줘.
-                            형식은 가독성 좋은 마크다운(Markdown)을 사용해.
+                            너는 전문 뉴스 편집장이야. 아래 뉴스 내용들을 바탕으로 오늘 핵심 이슈 3가지를 정리해주고, 
+                            전체적인 내용을 뉴스레터 형식으로 요약해줘.
                             
-                            뉴스 내용:
+                            내용:
                             {all_news}
                             """
                             
@@ -159,9 +156,10 @@ elif menu == "관리자 대시보드":
                             st.markdown(response.text)
                             
                         except Exception as e:
+                            # 에러 발생 시 상세 메시지 출력
                             st.error(f"AI 분석 중 오류가 발생했습니다: {e}")
-                            st.info("Tip: API 키가 올바른지, 혹은 Google AI Studio에서 'Gemini 1.5 Flash' 모델이 활성화 되어있는지 확인해주세요.")
-
+                            st.info("해결 방법: 구글 AI 스튜디오(aistudio.google.com)에서 API 키가 'Gemini 1.5 Flash' 모델을 지원하는지 확인해주세요.")
+                            
         with tab3:
             st.metric("누적 방문수", stats["total_views"])
             if stats["daily_views"]:
