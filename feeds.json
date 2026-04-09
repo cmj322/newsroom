@@ -6,5 +6,9 @@
     {
         "name": "한국경제",
         "url": "https://www.hankyung.com/feed/realestate"
+    },
+    {
+        "name": "서울경제",
+        "url": "https://www.sedaily.com/Rss/Realestate"
     }
 ]
