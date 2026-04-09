@@ -143,7 +143,7 @@ elif menu == "관리자 대시보드":
                         try:
                             # 2. AI 분석 (가장 표준적인 모델명 사용)
                             # 'models/gemini-1.5-flash' 대신 'gemini-1.5-flash'만 입력해보세요.
-                            model = genai.GenerativeModel(model_name='models/gemini-2.0-flash') 
+                            model = genai.GenerativeModel(model_name='models/gemini-2.5-flash') 
                             
                             prompt = f"""
                             너는 전문 뉴스 편집장이야. 아래 뉴스 내용들을 바탕으로 오늘 핵심 이슈 3가지를 정리해주고, 
