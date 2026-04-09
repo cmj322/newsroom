@@ -2,5 +2,9 @@
     {
         "name": "지디넷코리아",
         "url": "URL: https://zdnet.co.kr/rss/all.xml"
+    },
+    {
+        "name": "2. 소식",
+        "url": "https://yozm.wishket.com/magazine/feed/"
     }
 ]
