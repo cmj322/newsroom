@@ -6,5 +6,9 @@
     {
         "name": "2. 소식",
         "url": "https://yozm.wishket.com/magazine/feed/"
+    },
+    {
+        "name": "네이버뉴스",
+        "url": "https://n.news.naver.com/mnews/article/028/0002799954"
     }
 ]
